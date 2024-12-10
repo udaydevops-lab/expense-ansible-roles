@@ -19,7 +19,7 @@
 - name: run app pre-requisites
   ansible.builtin.import_role:
     name: common
-    tasks_from: apapp-pre-req
+    tasks_from: app-pre-req
 
 # - name: create app directory
 #   ansible.builtin.file:
