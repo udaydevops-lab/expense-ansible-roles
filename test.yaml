@@ -1,0 +1,8 @@
+- name: create a directory
+  hosts: backend
+  become: yes
+  tasks:
+  - name: create a directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
