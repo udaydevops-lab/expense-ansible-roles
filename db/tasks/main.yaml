@@ -1,35 +1,32 @@
-- name: install mysql Server
+- name: Install MySQL server
   ansible.builtin.dnf:
     name: mysql-server
-    state: lates
-
-- name: start and enable mysql Server
+    state: latest
+- name: Start and enable MySQL server
   ansible.builtin.service:
     name: mysqld
     state: started
     enabled: yes
-
-- name: install python mysql dependencies
+- name: Install Python MySQL dependencies
   ansible.builtin.pip:
     name:
-    - PyMySQL
-    - Cryptography
-    executable: pip3.9 # pip3.11 if python version is 3.1
-  #check the passpword is setup or not
-
-- name: check DB connection
+      - PyMySQL
+      - cryptography
+    executable: pip3.9  # Ensure you use the correct Python version's pip
+  when: ansible_facts['os_family'] == 'RedHat'
+- name: Check DB connection
   community.mysql.mysql_info:
-    login_host: "{{login_host}}"
+    login_host: "{{ login_host }}"
     login_user: root
     login_password: "{{ mysql_root_password }}"
     filter: version
   ignore_errors: yes
   register: mysql_connection_output
-
-- name: print output
+- name: Print DB connection output
   ansible.builtin.debug:
-    msg: "Output: {{mysql_connection_output}}"
-    
-- name: setup root passpword
-  ansible.builtin.command: "mysql_secure_installation --set-root-password {{ mysql_root_password }}"
-  when: mysql_connection_output.failed is true
+    msg: "Output: {{ mysql_connection_output }}"
+- name: Setup root password
+  ansible.builtin.command: 
+    cmd: >
+      mysql_secure_installation --set-root-password="{{ mysql_root_password }}"
+  when: mysql_connection_output.failed is defined and mysql_connection_output.failed
