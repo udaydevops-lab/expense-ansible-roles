@@ -1,0 +1,37 @@
+- name: install nginx server
+  ansible.builtin.dnf:
+    name: nginx
+    state: latest
+
+- name: start and enable nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+- name: delete default website
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: absent
+- name: create html directory
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: directory
+- name: download and extract frontend code
+  ansible.builtin.unarchive:
+    src: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+    dest: /usr/share/nginx/html
+    remote_src: yes
+
+# if there is any configuration chnage then only you need to restart the nginx
+#for that we use handlers, wite the restart task or whatever task you want to exicute then us notify:
+- name: copy backend conf
+  ansible.builtin.template:
+    src: expense.conf.j2
+    dest: /etc/nginx/default.d/expense.conf
+  notify:
+  - restart nginx # this name should match with the handlers task name
+
+# - name: restart nginx
+#   ansible.builtin.service:
+#     name: nginx
+#     state: restarted

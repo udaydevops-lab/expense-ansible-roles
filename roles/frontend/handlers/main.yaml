@@ -1,0 +1,4 @@
+- name: restart nginx   # if any configuration changes in nginx this task will trigger with notify 
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
