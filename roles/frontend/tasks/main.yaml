@@ -8,19 +8,28 @@
     name: nginx
     state: started
     enabled: yes
-- name: delete default website
-  ansible.builtin.file:
-    path: /usr/share/nginx/html
-    state: absent
-- name: create html directory
-  ansible.builtin.file:
-    path: /usr/share/nginx/html
-    state: directory
-- name: download and extract frontend code
-  ansible.builtin.unarchive:
-    src: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
-    dest: /usr/share/nginx/html
-    remote_src: yes
+
+- name: run app pre-requisites
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app-pre-requisites
+
+######### removed the below tasks as we are using common module #############
+######### and declired the variables in vars/main.yaml ###############
+
+# - name: delete default website
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html
+#     state: absent
+# - name: create html directory
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html
+#     state: directory
+# - name: download and extract frontend code
+#   ansible.builtin.unarchive:
+#     src: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+#     dest: /usr/share/nginx/html
+#     remote_src: yes
 
 # if there is any configuration chnage then only you need to restart the nginx
 #for that we use handlers, wite the restart task or whatever task you want to exicute then us notify:
