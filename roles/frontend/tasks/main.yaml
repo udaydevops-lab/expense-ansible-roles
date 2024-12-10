@@ -12,7 +12,7 @@
 - name: run app pre-requisites
   ansible.builtin.import_role:
     name: common
-    tasks_from: app-pre-requisites
+    tasks_from: app-pre-req
 
 ######### removed the below tasks as we are using common module #############
 ######### and declired the variables in vars/main.yaml ###############
