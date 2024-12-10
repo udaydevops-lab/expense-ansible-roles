@@ -35,6 +35,7 @@
   ansible.builtin.command: npm install
   args:
     chdir: /app
+    remote_src: yes
 
 - name: copy backend service
   ansible.builtin.template:
