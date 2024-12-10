@@ -1,11 +1,11 @@
 - name: delete app directory
   ansible.builtin.file:
-    path: " {{ app_location }} "
+    path: "{{ app_location }}"
     state: absent
 
 - name: create app directory
   ansible.builtin.file:
-    path: " {{ app_location }} "
+    path: "{{ app_location }}"
     state: directory
 
 - name: download and extract code
