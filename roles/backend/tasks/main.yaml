@@ -17,6 +17,8 @@
     name: expense
 
 - name: run app pre-requisites
+  tags:
+  - deployment
   ansible.builtin.import_role:
     name: common
     tasks_from: app-pre-req
@@ -38,7 +40,9 @@
 #     remote_src: yes
 
 - name: install npm dependencies
-  ansible.builtin.command: npm install
+  tags:
+  - deployment                            ## we are using this tags to run this specific tasks in this whole tasks
+  ansible.builtin.command: npm install    ## mention it in the ansible commadnd
   args:
     chdir: /app
 
@@ -46,6 +50,8 @@
   ansible.builtin.template:
     src: backend.service.j2
     dest: /etc/systemd/system/backend.service
+  notify: 
+  - daemon reload
 
 - name: install python dependencies
   ansible.builtin.pip:
@@ -63,11 +69,15 @@
     state: import
     name: all
 
-- name: daemon reload
-  ansible.builtin.systemd_service:
-    daemon_reload: true
+
+# written handlers for this
+# - name: daemon reload
+#   ansible.builtin.systemd_service:
+#     daemon_reload: true
 
 - name: start and enable backend service
+  tags: 
+    - deployment
   ansible.builtin.service:
     name: backend
     state: restarted
