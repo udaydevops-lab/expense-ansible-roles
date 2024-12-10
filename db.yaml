@@ -1,0 +1,5 @@
+- name: congigure db server
+  host: db
+  bocome: yes
+  roles:
+    - db
